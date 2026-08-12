@@ -1,0 +1,119 @@
+/* ========================================
+   CONFIGURAÇÕES GERAIS
+   ======================================== */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: "Poppins", sans-serif;
+    background-color: #ffffff;
+    color: #1a1a1a;
+    min-height: 100vh;
+}
+
+
+/* ========================================
+   CABEÇALHO
+   ======================================== */
+
+header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 30px 20px;
+}
+
+header img {
+    width: 100%;
+    max-width: 350px;
+    height: auto;
+}
+
+/* ========================================
+   CONTEÚDO PRINCIPAL
+   ======================================== */
+
+main {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-bottom: 40px;
+}
+
+
+/* ========================================
+   ÁREA DE PESQUISA
+   ======================================== */
+
+main section:first-child {
+    margin-bottom: 40px;
+}
+
+main section:first-child h2 {
+    margin-bottom: 20px;
+    font-size: 1.8rem;
+}
+
+/* ========================================
+   FORMULÁRIO DE PESQUISA
+   ======================================== */
+
+main section:first-child form {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+main section:first-child label {
+    display: none;
+}
+
+main section:first-child input {
+    flex: 1;
+    min-width: 200px;
+    padding: 12px 15px;
+    border: 1px solid #d0d0d0;
+    border-radius: 8px;
+    font-family: "Poppins", sans-serif;
+    font-size: 1rem;
+    background-color: #ffffff;
+    color: #1a1a1a;
+    outline: none;
+}
+
+main section:first-child input:focus {
+    border-color: #1a4b8c;
+}
+
+main section:first-child button {
+    padding: 12px 20px;
+    border: 1px solid #1a4b8c;
+    border-radius: 8px;
+    background-color: #1a4b8c;
+    color: #ffffff;
+    font-family: "Poppins", sans-serif;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+main section:first-child button:hover {
+    background-color: #143966;
+    border-color: #143966;
+}
+
+#btnAdicionarJogo {
+    margin-left: auto;
+    background-color: #ffffff;
+    color: #1a4b8c;
+}
+
+#btnAdicionarJogo:hover {
+    background-color: #1a4b8c;
+    color: #ffffff;
+}
