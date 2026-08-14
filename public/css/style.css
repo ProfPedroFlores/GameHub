@@ -147,3 +147,32 @@ main section:first-child button:hover {
     height: 380px;
     object-fit: cover;
 }
+
+/* ========================================
+   RESPONSIVIDADE
+   Desktop       Tablet       Celular
+    3 × 3         2 × N        1 × N
+   ======================================== */
+
+@media (max-width: 768px) {
+
+    #gridJogos {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .card-jogo > img {
+        height: 320px;
+    }
+}
+
+@media (max-width: 480px) {
+
+    #gridJogos {
+        grid-template-columns: 1fr;
+    }
+
+    .card-jogo > img {
+        height: auto;
+    }
+}
+
