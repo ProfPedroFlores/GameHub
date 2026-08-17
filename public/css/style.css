@@ -149,7 +149,37 @@ main section:first-child button:hover {
 }
 
 /* ========================================
-   RESPONSIVIDADE
+   INFORMAÇÕES DO JOGO - HOVER
+   ======================================== */
+.info-jogo {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 20px;
+    background-color: rgba(0, 0, 0, 0.85);
+    color: #ffffff;
+    opacity: 0;
+    transform: translateY(100%);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.card-jogo:hover .info-jogo {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.info-jogo h3 {
+    margin-bottom: 5px;
+    font-size: 1.1rem;
+}
+
+.info-jogo p {
+    font-size: 1.2rem;
+}
+
+/* ========================================
+                RESPONSIVIDADE
    Desktop       Tablet       Celular
     3 × 3         2 × N        1 × N
    ======================================== */
