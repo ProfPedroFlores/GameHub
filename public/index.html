@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>GameHub</title>
-    
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
@@ -29,12 +29,7 @@
 
             <form>
                 <label for="campoPesquisa">Pesquisar jogos</label>
-                <input
-                    type="text"
-                    id="campoPesquisa"
-                    name="pesquisa"
-                    placeholder="Digite o nome de um jogo"
-                >
+                <input type="text" id="campoPesquisa" name="pesquisa" placeholder="Digite o nome de um jogo">
 
                 <button type="submit">Pesquisar</button>
 
@@ -50,10 +45,7 @@
             <div id="gridJogos">
 
                 <article class="card-jogo">
-                    <img
-                        src="https://via.placeholder.com/300x400"
-                        alt="Capa do jogo"
-                    >
+                    <img src="https://via.placeholder.com/300x400" alt="Capa do jogo">
 
                     <div class="info-jogo">
                         <h3>Nome do jogo</h3>
@@ -62,10 +54,7 @@
                 </article>
 
                 <article class="card-jogo">
-                    <img
-                        src="https://via.placeholder.com/300x400"
-                        alt="Capa do jogo"
-                    >
+                    <img src="https://via.placeholder.com/300x400" alt="Capa do jogo">
 
                     <div class="info-jogo">
                         <h3>Nome do jogo</h3>
@@ -74,10 +63,7 @@
                 </article>
 
                 <article class="card-jogo">
-                    <img
-                        src="https://via.placeholder.com/300x400"
-                        alt="Capa do jogo"
-                    >
+                    <img src="https://via.placeholder.com/300x400" alt="Capa do jogo">
 
                     <div class="info-jogo">
                         <h3>Nome do jogo</h3>
@@ -86,10 +72,7 @@
                 </article>
 
                 <article class="card-jogo">
-                    <img
-                        src="https://via.placeholder.com/300x400"
-                        alt="Capa do jogo"
-                    >
+                    <img src="https://via.placeholder.com/300x400" alt="Capa do jogo">
 
                     <div class="info-jogo">
                         <h3>Nome do jogo</h3>
@@ -98,10 +81,7 @@
                 </article>
 
                 <article class="card-jogo">
-                    <img
-                        src="https://via.placeholder.com/300x400"
-                        alt="Capa do jogo"
-                    >
+                    <img src="https://via.placeholder.com/300x400" alt="Capa do jogo">
 
                     <div class="info-jogo">
                         <h3>Nome do jogo</h3>
@@ -110,10 +90,7 @@
                 </article>
 
                 <article class="card-jogo">
-                    <img
-                        src="https://via.placeholder.com/300x400"
-                        alt="Capa do jogo"
-                    >
+                    <img src="https://via.placeholder.com/300x400" alt="Capa do jogo">
 
                     <div class="info-jogo">
                         <h3>Nome do jogo</h3>
@@ -122,10 +99,7 @@
                 </article>
 
                 <article class="card-jogo">
-                    <img
-                        src="https://via.placeholder.com/300x400"
-                        alt="Capa do jogo"
-                    >
+                    <img src="https://via.placeholder.com/300x400" alt="Capa do jogo">
 
                     <div class="info-jogo">
                         <h3>Nome do jogo</h3>
@@ -134,10 +108,7 @@
                 </article>
 
                 <article class="card-jogo">
-                    <img
-                        src="https://via.placeholder.com/300x400"
-                        alt="Capa do jogo"
-                    >
+                    <img src="https://via.placeholder.com/300x400" alt="Capa do jogo">
 
                     <div class="info-jogo">
                         <h3>Nome do jogo</h3>
@@ -146,10 +117,7 @@
                 </article>
 
                 <article class="card-jogo">
-                    <img
-                        src="https://via.placeholder.com/300x400"
-                        alt="Capa do jogo"
-                    >
+                    <img src="https://via.placeholder.com/300x400" alt="Capa do jogo">
 
                     <div class="info-jogo">
                         <h3>Nome do jogo</h3>
@@ -168,6 +136,78 @@
         </nav>
 
     </main>
+
+    <!-- Modal de cadastro de jogo -->
+    <div id="modalCadastro" class="modal">
+
+        <div class="modal-conteudo">
+
+            <div class="modal-cabecalho">
+                <h2>Cadastrar novo jogo</h2>
+
+                <button type="button" id="btnFecharModal" aria-label="Fechar modal">
+                    &times;
+                </button>
+            </div>
+
+            <form id="formCadastroJogo">
+
+                <div class="campo-formulario">
+                    <label for="nomeJogo">Nome do jogo</label>
+                    <input type="text" id="nomeJogo" name="nome" placeholder="Digite o nome do jogo">
+                </div>
+
+                <div class="campo-formulario">
+                    <label for="generoJogo">Gênero</label>
+                    <input type="text" id="generoJogo" name="genero" placeholder="Ex.: RPG, Ação, Aventura">
+                </div>
+
+                <div class="campo-formulario">
+                    <label for="anoJogo">Ano de lançamento</label>
+                    <input type="number" id="anoJogo" name="ano" placeholder="Ex.: 2025">
+                </div>
+
+                <div class="campo-formulario">
+                    <label for="publisherJogo">Publisher</label>
+                    <input type="text" id="publisherJogo" name="publisher" placeholder="Digite a publisher">
+                </div>
+
+                <div class="campo-formulario">
+                    <label for="desenvolvedoraJogo">Desenvolvedora</label>
+                    <input type="text" id="desenvolvedoraJogo" name="desenvolvedora"
+                        placeholder="Digite a desenvolvedora">
+                </div>
+
+                <div class="campo-formulario">
+                    <label for="notaJogo">Sua avaliação</label>
+
+                    <select id="notaJogo" name="nota">
+                        <option value="">Selecione uma nota</option>
+                        <option value="1">★☆☆☆☆</option>
+                        <option value="2">★★☆☆☆</option>
+                        <option value="3">★★★☆☆</option>
+                        <option value="4">★★★★☆</option>
+                        <option value="5">★★★★★</option>
+                    </select>
+                </div>
+
+                <div class="modal-acoes">
+
+                    <button type="button" id="btnCancelar">
+                        Cancelar
+                    </button>
+
+                    <button type="submit">
+                        Salvar jogo
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
 
     <script src="js/script.js"></script>
 
