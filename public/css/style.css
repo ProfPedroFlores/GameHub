@@ -259,11 +259,8 @@ main section:first-child button:hover {
 
 .modal-acoes {
     display: flex;
-
     justify-content: flex-end;
-
     gap: 10px;
-
     margin-top: 25px;
 }
 
@@ -282,6 +279,10 @@ main section:first-child button:hover {
 .modal-acoes button:hover {
     background-color: #000000;
     color: #ffffff;
+}
+
+.modal.oculta {
+    display: none;
 }
 
 /* ========================================
