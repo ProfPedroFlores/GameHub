@@ -1,69 +1,67 @@
 require("dotenv").config();
 
-const http = require("http");
+const express = require("express");
+const path = require("path");
 
-const server = http.createServer(async (req, res) => {
+const app = express();
 
-    const url = new URL(req.url, `http://${req.headers.host}`);
+app.use(
+    express.static(
+        path.join(__dirname, "../public")
+    )
+);
 
-    if (url.pathname === "/api/jogos") {
+app.get("/api/jogos", async (req, res) => {
 
-        const nome = url.searchParams.get("nome");
+    const nome = req.query.nome;
 
-        const params = new URLSearchParams({
-            apikey: process.env.THEGAMESDB_API_KEY,
-            name: nome,
-            include: "boxart"
+    if (!nome) {
+        return res.status(400).json({
+            erro: "Informe o nome do jogo."
         });
-
-        const resposta = await fetch(
-            `https://api.thegamesdb.net/v1.1/Games/ByGameName?${params}`
-        );
-
-        const dados = await resposta.json();
-
-        const jogos = dados.data.games;
-
-        const jogosGameHub = jogos.map(jogo => {
-
-            const capas = dados.include.boxart.data[jogo.id] || [];
-
-            const capaFront = capas.find(capa => capa.side === "front");
-
-            const capa = capaFront
-                ? dados.include.boxart.base_url.medium + capaFront.filename
-                : null;
-
-            return {
-    id: jogo.id,
-    nome: jogo.game_title,
-    ano: jogo.release_date
-        ? jogo.release_date.substring(0, 4)
-        : null,
-    capa: capa
-};
-
-        });
-
-        console.log(jogosGameHub);
-
-        res.writeHead(200, {
-            "Content-Type": "application/json"
-        });
-
-        res.end(JSON.stringify(jogosGameHub));
-
-        return;
     }
 
-    res.writeHead(200, {
-        "Content-Type": "text/plain"
+    const params = new URLSearchParams({
+        apikey: process.env.THEGAMESDB_API_KEY,
+        name: nome,
+        include: "boxart"
     });
 
-    res.end("GameHub API funcionando!");
+    const resposta = await fetch(
+        `https://api.thegamesdb.net/v1.1/Games/ByGameName?${params}`
+    );
+
+    const dados = await resposta.json();
+
+    const jogos = dados.data.games;
+
+    const jogosGameHub = jogos.map(jogo => {
+
+        const capas =
+            dados.include.boxart.data[jogo.id] || [];
+
+        const capaFront =
+            capas.find(capa => capa.side === "front");
+
+        const capa = capaFront
+            ? dados.include.boxart.base_url.medium + capaFront.filename
+            : null;
+
+        return {
+            id: jogo.id,
+            nome: jogo.game_title,
+            ano: jogo.release_date
+                ? jogo.release_date.substring(0, 4)
+                : null,
+            capa: capa
+        };
+
+    });
+
+    res.json(jogosGameHub);
 
 });
 
-server.listen(3000, () => {
+app.listen(3000, () => {
     console.log("Servidor rodando em http://localhost:3000");
 });
