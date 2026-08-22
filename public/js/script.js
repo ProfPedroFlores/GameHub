@@ -2,6 +2,7 @@
 const btnAdicionarJogo = document.getElementById("btnAdicionarJogo");
 const btnFecharModal = document.getElementById("btnFecharModal");
 const btnCancelar = document.getElementById("btnCancelar");
+const gridJogos = document.getElementById("gridJogos");
 
 //Elementos da Modal
 const modalCadastro = document.getElementById("modalCadastro");
@@ -9,6 +10,7 @@ const formCadastroJogo = document.getElementById("formCadastroJogo");
 const btnBuscarJogo = document.getElementById("btnBuscarJogo");
 const campoNomeJogo = document.getElementById("nomeJogo");
 const campoAnoJogo = document.getElementById("anoJogo");
+const campoNotaJogo = document.getElementById("notaJogo");
 const resultadosBusca = document.getElementById("resultadosBusca");
 const areaJogoSelecionado = document.getElementById("jogoSelecionado");
 const capaJogoSelecionado = document.getElementById("capaJogoSelecionado");
@@ -23,7 +25,6 @@ let jogoSelecionado = null;
 function abrirModal() {
     modalCadastro.classList.remove("oculta");
 }
-
 
 function fecharModal() {
     modalCadastro.classList.add("oculta");
@@ -299,6 +300,67 @@ async function buscarJogo() {
 
 }
 
+async function salvarJogo(evento) {
+
+    evento.preventDefault();
+
+    const jogo = {
+        thegamesdb_id: jogoSelecionado?.id || null,
+        nome: campoNomeJogo.value.trim(),
+        genero: campoGeneroJogo.value.trim() || null,
+        ano: campoAnoJogo.value
+            ? Number(campoAnoJogo.value)
+            : null,
+        publisher:
+            campoPublisherJogo.value.trim() || null,
+        desenvolvedora:
+            campoDesenvolvedoraJogo.value.trim() || null,
+        capa: jogoSelecionado?.capa || null,
+        avaliacao: campoNotaJogo.value
+            ? Number(campoNotaJogo.value)
+            : null
+    };
+
+    try {
+
+        const resposta = await fetch("/api/jogos", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(jogo)
+        });
+
+        const dados = await resposta.json();
+
+        if (!resposta.ok) {
+
+            throw new Error(
+                dados.erro ||
+                "Não foi possível cadastrar o jogo."
+            );
+
+        }
+
+        alert(dados.mensagem);
+
+        await carregarBiblioteca();
+
+        fecharModal();
+
+    } catch (erro) {
+
+        console.error(
+            "Erro ao salvar jogo:",
+            erro
+        );
+
+        alert(erro.message);
+
+    }
+
+}
+
 function limparModal() {
 
     formCadastroJogo.reset();
@@ -319,6 +381,84 @@ function fecharModal() {
     limparModal();
 }
 
+function criarCardBiblioteca(jogo) {
+
+    const card = document.createElement("article");
+    card.classList.add("card-jogo");
+
+    const imagem = document.createElement("img");
+
+    if (jogo.capa) {
+
+        imagem.src = jogo.capa;
+        imagem.alt = `Capa de ${jogo.nome}`;
+
+    } else {
+
+        imagem.alt = "Jogo sem capa";
+
+    }
+
+    const informacoes = document.createElement("div");
+    informacoes.classList.add("info-jogo");
+
+    const nome = document.createElement("h3");
+    nome.textContent = jogo.nome;
+
+    const avaliacao = document.createElement("p");
+
+    avaliacao.textContent = jogo.avaliacao
+        ? "★".repeat(jogo.avaliacao)
+        : "Sem avaliação";
+
+    informacoes.appendChild(nome);
+    informacoes.appendChild(avaliacao);
+
+    card.appendChild(imagem);
+    card.appendChild(informacoes);
+
+    return card;
+}
+
+async function carregarBiblioteca() {
+
+    try {
+
+        const resposta = await fetch("/api/biblioteca");
+
+        const jogos = await resposta.json();
+
+        if (!resposta.ok) {
+
+            throw new Error(
+                jogos.erro ||
+                "Não foi possível carregar a biblioteca."
+            );
+
+        }
+
+        gridJogos.innerHTML = "";
+
+        jogos.forEach(jogo => {
+
+            const card =
+                criarCardBiblioteca(jogo);
+
+            gridJogos.appendChild(card);
+
+        });
+
+    } catch (erro) {
+
+        console.error(
+            "Erro ao carregar biblioteca:",
+            erro
+        );
+
+    }
+
+}
+
 btnAdicionarJogo.addEventListener("click", abrirModal);
 
 btnFecharModal.addEventListener("click", fecharModal);
@@ -326,3 +466,7 @@ btnFecharModal.addEventListener("click", fecharModal);
 btnCancelar.addEventListener("click", fecharModal);
 
 btnBuscarJogo.addEventListener("click", buscarJogo);
+
+formCadastroJogo.addEventListener("submit", salvarJogo);
+
+carregarBiblioteca();

@@ -1,4 +1,5 @@
 require("dotenv").config();
+const pool = require("./db");
 
 if (!process.env.THEGAMESDB_API_KEY) {
     console.error(
@@ -12,6 +13,7 @@ const express = require("express");
 const path = require("path");
 
 const app = express();
+app.use(express.json());
 
 app.use(
     express.static(
@@ -272,6 +274,135 @@ app.get("/api/developers/:id", async (req, res) => {
 
         return res.status(500).json({
             erro: "Erro interno ao buscar desenvolvedora."
+        });
+
+    }
+
+});
+
+app.post("/api/jogos", async (req, res) => {
+
+    try {
+
+        const {
+            thegamesdb_id,
+            nome,
+            genero,
+            ano,
+            publisher,
+            desenvolvedora,
+            capa,
+            avaliacao
+        } = req.body;
+
+        if (!nome || !nome.trim()) {
+
+            return res.status(400).json({
+                erro: "O nome do jogo é obrigatório."
+            });
+
+        }
+
+        if (
+            avaliacao &&
+            (avaliacao < 1 || avaliacao > 5)
+        ) {
+
+            return res.status(400).json({
+                erro: "A avaliação deve estar entre 1 e 5."
+            });
+
+        }
+
+        const sql = `
+            INSERT INTO jogos
+            (
+                thegamesdb_id,
+                nome,
+                genero,
+                ano,
+                publisher,
+                desenvolvedora,
+                capa,
+                avaliacao
+            )
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        `;
+
+        const valores = [
+            thegamesdb_id || null,
+            nome.trim(),
+            genero || null,
+            ano || null,
+            publisher || null,
+            desenvolvedora || null,
+            capa || null,
+            avaliacao || null
+        ];
+
+        const [resultado] = await pool.execute(
+            sql,
+            valores
+        );
+
+        return res.status(201).json({
+            mensagem: "Jogo cadastrado com sucesso!",
+            id: resultado.insertId
+        });
+
+    } catch (erro) {
+
+        console.error(
+            "Erro ao cadastrar jogo:",
+            erro.message
+        );
+
+        if (erro.code === "ER_DUP_ENTRY") {
+
+            return res.status(409).json({
+                erro: "Este jogo já está cadastrado."
+            });
+
+        }
+
+        return res.status(500).json({
+            erro: "Erro interno ao cadastrar jogo."
+        });
+
+    }
+
+});
+
+app.get("/api/biblioteca", async (req, res) => {
+
+    try {
+
+        const [jogos] = await pool.query(`
+            SELECT
+                id,
+                thegamesdb_id,
+                nome,
+                genero,
+                ano,
+                publisher,
+                desenvolvedora,
+                capa,
+                avaliacao
+            FROM jogos
+            ORDER BY id DESC
+        `);
+
+        return res.json(jogos);
+
+    } catch (erro) {
+
+        console.error(
+            "Erro ao carregar biblioteca:",
+            erro.message
+        );
+
+        return res.status(500).json({
+            erro: "Erro interno ao carregar biblioteca."
         });
 
     }
