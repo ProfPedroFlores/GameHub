@@ -59,7 +59,95 @@ function criarResultadoJogo(jogo) {
     return resultado;
 }
 
+async function buscarGenero(idGenero) {
+
+    try {
+
+        const resposta = await fetch(
+            `/api/generos/${idGenero}`
+        );
+
+        const genero = await resposta.json();
+
+        if (!resposta.ok) {
+            return "";
+        }
+
+        return genero.nome;
+
+    } catch (erro) {
+
+        console.error(
+            "Erro ao carregar gênero:",
+            erro
+        );
+
+        return "";
+
+    }
+
+}
+
+async function buscarPublisher(idPublisher) {
+
+    try {
+
+        const resposta = await fetch(
+            `/api/publishers/${idPublisher}`
+        );
+
+        const publisher = await resposta.json();
+
+        if (!resposta.ok) {
+            return "";
+        }
+
+        return publisher.nome;
+
+    } catch (erro) {
+
+        console.error(
+            "Erro ao carregar publisher:",
+            erro
+        );
+
+        return "";
+
+    }
+
+}
+
+async function buscarDesenvolvedora(idDesenvolvedora) {
+
+    try {
+
+        const resposta = await fetch(
+            `/api/developers/${idDesenvolvedora}`
+        );
+
+        const desenvolvedora = await resposta.json();
+
+        if (!resposta.ok) {
+            return "";
+        }
+
+        return desenvolvedora.nome;
+
+    } catch (erro) {
+
+        console.error(
+            "Erro ao carregar desenvolvedora:",
+            erro
+        );
+
+        return "";
+
+    }
+
+}
+
 async function selecionarJogo(jogo) {
+
     jogoSelecionado = jogo;
 
     campoNomeJogo.value = jogo.nome;
@@ -79,136 +167,48 @@ async function selecionarJogo(jogo) {
             "oculta"
         );
 
-    }
-
-    // GÊNERO
-    if (jogo.generos?.length > 0) {
-
-        try {
-
-            const idGenero = jogo.generos[0];
-
-            const respostaGenero = await fetch(
-                `/api/generos/${idGenero}`
-            );
-
-            const genero =
-                await respostaGenero.json();
-
-            if (respostaGenero.ok) {
-
-                campoGeneroJogo.value =
-                    genero.nome;
-
-            } else {
-
-                campoGeneroJogo.value = "";
-
-            }
-
-        } catch (erro) {
-
-            console.error(
-                "Erro ao carregar gênero:",
-                erro
-            );
-
-            campoGeneroJogo.value = "";
-
-        }
-
     } else {
 
-        campoGeneroJogo.value = "";
+        areaJogoSelecionado.classList.add(
+            "oculta"
+        );
+
+        capaJogoSelecionado.removeAttribute("src");
 
     }
 
-    // PUBLISHER
-    if (jogo.publishers?.length > 0) {
+    // IDs que serão utilizados nas consultas
+    const idGenero =
+        jogo.generos?.[0];
 
-        try {
+    const idPublisher =
+        jogo.publishers?.[0];
 
-            const idPublisher =
-                jogo.publishers[0];
+    const idDesenvolvedora =
+        jogo.desenvolvedores?.[0];
 
-            const respostaPublisher = await fetch(
-                `/api/publishers/${idPublisher}`
-            );
+    // As três consultas são executadas em paralelo
+    const [genero, publisher, desenvolvedora] = await Promise.all([
 
-            const publisher =
-                await respostaPublisher.json();
+        idGenero
+            ? buscarGenero(idGenero)
+            : "",
 
-            if (respostaPublisher.ok) {
+        idPublisher
+            ? buscarPublisher(idPublisher)
+            : "",
 
-                campoPublisherJogo.value =
-                    publisher.nome;
+        idDesenvolvedora
+            ? buscarDesenvolvedora(idDesenvolvedora)
+            : ""
 
-            } else {
+    ]);
 
-                campoPublisherJogo.value = "";
+    // Preenche os campos da modal
+    campoGeneroJogo.value = genero;
+    campoPublisherJogo.value = publisher;
+    campoDesenvolvedoraJogo.value = desenvolvedora;
 
-            }
-
-        } catch (erro) {
-
-            console.error(
-                "Erro ao carregar publisher:",
-                erro
-            );
-
-            campoPublisherJogo.value = "";
-
-        }
-
-    } else {
-
-        campoPublisherJogo.value = "";
-
-    }
-
-    // DESENVOLVEDORA
-    if (jogo.desenvolvedores?.length > 0) {
-
-        try {
-
-            const idDesenvolvedora =
-                jogo.desenvolvedores[0];
-
-            const respostaDesenvolvedora =
-                await fetch(
-                    `/api/developers/${idDesenvolvedora}`
-                );
-
-            const desenvolvedora =
-                await respostaDesenvolvedora.json();
-
-            if (respostaDesenvolvedora.ok) {
-
-                campoDesenvolvedoraJogo.value =
-                    desenvolvedora.nome;
-
-            } else {
-
-                campoDesenvolvedoraJogo.value = "";
-
-            }
-
-        } catch (erro) {
-
-            console.error(
-                "Erro ao carregar desenvolvedora:",
-                erro
-            );
-
-            campoDesenvolvedoraJogo.value = "";
-
-        }
-
-    } else {
-
-        campoDesenvolvedoraJogo.value = "";
-
-    }
 }
 
 async function buscarJogo() {
