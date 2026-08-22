@@ -467,6 +467,32 @@ btnCancelar.addEventListener("click", fecharModal);
 
 btnBuscarJogo.addEventListener("click", buscarJogo);
 
+formCadastroJogo.addEventListener("keydown", (evento) => {
+
+    if (evento.key === "Enter") {
+
+        evento.preventDefault();
+
+        if (evento.target === campoNomeJogo) {
+            buscarJogo();
+        }
+
+    }
+
+});
+
 formCadastroJogo.addEventListener("submit", salvarJogo);
+
+campoNomeJogo.addEventListener("keydown", (evento) => {
+
+    if (evento.key === "Enter") {
+
+        evento.preventDefault();
+
+        buscarJogo();
+
+    }
+
+});
 
 carregarBiblioteca();
