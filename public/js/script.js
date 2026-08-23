@@ -20,6 +20,14 @@ const capaJogoSelecionado = document.getElementById("capaJogoSelecionado");
 const campoGeneroJogo = document.getElementById("generoJogo");
 const campoPublisherJogo = document.getElementById("publisherJogo");
 const campoDesenvolvedoraJogo = document.getElementById("desenvolvedoraJogo");
+const camposObrigatorios = [
+    campoNomeJogo,
+    campoGeneroJogo,
+    campoAnoJogo,
+    campoPublisherJogo,
+    campoDesenvolvedoraJogo,
+    campoNotaJogo
+];
 
 //Variável para ser preenchida na busca
 let jogoSelecionado = null;
@@ -303,9 +311,33 @@ async function buscarJogo() {
 
 }
 
+function validarFormularioCadastro() {
+
+    let formularioValido = true;
+
+    camposObrigatorios.forEach(campo => {
+
+        campo.classList.remove("campo-invalido");
+
+        if (!campo.value.trim()) {
+
+            campo.classList.add("campo-invalido");
+
+            formularioValido = false;
+        }
+
+    });
+
+    return formularioValido;
+}
+
 async function salvarJogo(evento) {
 
     evento.preventDefault();
+
+    if (!validarFormularioCadastro()) {
+        return;
+    }
 
     const jogo = {
         thegamesdb_id: jogoSelecionado?.id || null,
@@ -625,5 +657,25 @@ formPesquisa.addEventListener("submit", (evento) => {
         campoPesquisa.value.trim();
 
     carregarBiblioteca(nome, 1);
+
+});
+
+camposObrigatorios.forEach(campo => {
+
+    campo.addEventListener("input", () => {
+
+        if (campo.value.trim()) {
+            campo.classList.remove("campo-invalido");
+        }
+
+    });
+
+});
+
+campo.addEventListener("change", () => {
+
+    if (campo.value.trim()) {
+        campo.classList.remove("campo-invalido");
+    }
 
 });

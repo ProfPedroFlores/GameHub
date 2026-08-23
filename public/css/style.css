@@ -363,6 +363,16 @@ main section:first-child button:hover {
     cursor: not-allowed;
 }
 
+.campo-invalido {
+    border-color: #dc2626;
+    background-color: #fff7f7;
+}
+
+.campo-invalido:focus {
+    border-color: #dc2626;
+    outline: none;
+}
+
 /* ========================================
                 RESPONSIVIDADE
    Desktop       Tablet       Celular

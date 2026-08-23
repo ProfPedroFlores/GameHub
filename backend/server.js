@@ -295,10 +295,17 @@ app.post("/api/jogos", async (req, res) => {
             avaliacao
         } = req.body;
 
-        if (!nome || !nome.trim()) {
+        if (
+            !nome?.trim() ||
+            !genero?.trim() ||
+            !ano ||
+            !publisher?.trim() ||
+            !desenvolvedora?.trim() ||
+            !avaliacao
+        ) {
 
             return res.status(400).json({
-                erro: "O nome do jogo é obrigatório."
+                erro: "Preencha todos os campos obrigatórios."
             });
 
         }
