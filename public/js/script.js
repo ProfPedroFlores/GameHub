@@ -3,6 +3,8 @@ const btnAdicionarJogo = document.getElementById("btnAdicionarJogo");
 const btnFecharModal = document.getElementById("btnFecharModal");
 const btnCancelar = document.getElementById("btnCancelar");
 const gridJogos = document.getElementById("gridJogos");
+const formPesquisa = document.getElementById("formPesquisa");
+const campoPesquisa = document.getElementById("campoPesquisa");
 
 //Elementos da Modal
 const modalCadastro = document.getElementById("modalCadastro");
@@ -420,11 +422,15 @@ function criarCardBiblioteca(jogo) {
     return card;
 }
 
-async function carregarBiblioteca() {
+async function carregarBiblioteca(nome = "") {
 
     try {
 
-        const resposta = await fetch("/api/biblioteca");
+        const url = nome
+            ? `/api/biblioteca?nome=${encodeURIComponent(nome)}`
+            : "/api/biblioteca";
+
+        const resposta = await fetch(url);
 
         const jogos = await resposta.json();
 
@@ -438,6 +444,14 @@ async function carregarBiblioteca() {
         }
 
         gridJogos.innerHTML = "";
+
+        if (jogos.length === 0) {
+
+            gridJogos.textContent =
+                "Nenhum jogo encontrado.";
+
+            return;
+        }
 
         jogos.forEach(jogo => {
 
@@ -496,3 +510,14 @@ campoNomeJogo.addEventListener("keydown", (evento) => {
 });
 
 carregarBiblioteca();
+
+formPesquisa.addEventListener("submit", (evento) => {
+
+    evento.preventDefault();
+
+    const nome =
+        campoPesquisa.value.trim();
+
+    carregarBiblioteca(nome);
+
+});

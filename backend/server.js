@@ -377,7 +377,9 @@ app.get("/api/biblioteca", async (req, res) => {
 
     try {
 
-        const [jogos] = await pool.query(`
+        const nome = req.query.nome?.trim();
+
+        let sql = `
             SELECT
                 id,
                 thegamesdb_id,
@@ -389,8 +391,28 @@ app.get("/api/biblioteca", async (req, res) => {
                 capa,
                 avaliacao
             FROM jogos
+        `;
+
+        const valores = [];
+
+        if (nome) {
+
+            sql += `
+                WHERE nome LIKE ?
+            `;
+
+            valores.push(`%${nome}%`);
+
+        }
+
+        sql += `
             ORDER BY id DESC
-        `);
+        `;
+
+        const [jogos] = await pool.execute(
+            sql,
+            valores
+        );
 
         return res.json(jogos);
 
