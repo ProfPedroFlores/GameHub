@@ -5,6 +5,7 @@ const btnCancelar = document.getElementById("btnCancelar");
 const gridJogos = document.getElementById("gridJogos");
 const formPesquisa = document.getElementById("formPesquisa");
 const campoPesquisa = document.getElementById("campoPesquisa");
+const paginacao = document.getElementById("paginacao");
 
 //Elementos da Modal
 const modalCadastro = document.getElementById("modalCadastro");
@@ -422,26 +423,129 @@ function criarCardBiblioteca(jogo) {
     return card;
 }
 
-async function carregarBiblioteca(nome = "") {
+function criarPaginacao(
+    totalPaginas,
+    paginaAtual,
+    nomePesquisa
+) {
+
+    paginacao.innerHTML = "";
+
+    if (totalPaginas <= 1) {
+        return;
+    }
+
+    // BOTÃO ANTERIOR
+    const btnAnterior =
+        document.createElement("button");
+
+    btnAnterior.type = "button";
+    btnAnterior.textContent = "Anterior";
+
+    btnAnterior.disabled =
+        paginaAtual === 1;
+
+    btnAnterior.addEventListener("click", () => {
+
+        carregarBiblioteca(
+            nomePesquisa,
+            paginaAtual - 1
+        );
+
+    });
+
+    paginacao.appendChild(btnAnterior);
+
+
+    // BOTÕES DAS PÁGINAS
+    for (
+        let numeroPagina = 1;
+        numeroPagina <= totalPaginas;
+        numeroPagina++
+    ) {
+
+        const botao =
+            document.createElement("button");
+
+        botao.type = "button";
+        botao.textContent = numeroPagina;
+
+        if (numeroPagina === paginaAtual) {
+            botao.classList.add("ativa");
+        }
+
+        botao.addEventListener("click", () => {
+
+            carregarBiblioteca(
+                nomePesquisa,
+                numeroPagina
+            );
+
+        });
+
+        paginacao.appendChild(botao);
+
+    }
+
+
+    // BOTÃO PRÓXIMA
+    const btnProxima =
+        document.createElement("button");
+
+    btnProxima.type = "button";
+    btnProxima.textContent = "Próxima";
+
+    btnProxima.disabled =
+        paginaAtual === totalPaginas;
+
+    btnProxima.addEventListener("click", () => {
+
+        carregarBiblioteca(
+            nomePesquisa,
+            paginaAtual + 1
+        );
+
+    });
+
+    paginacao.appendChild(btnProxima);
+
+}
+
+async function carregarBiblioteca(nome = "", pagina = 1) {
 
     try {
 
-        const url = nome
-            ? `/api/biblioteca?nome=${encodeURIComponent(nome)}`
-            : "/api/biblioteca";
+        const parametros = new URLSearchParams({
+            pagina: pagina,
+            limite: 9
+        });
 
-        const resposta = await fetch(url);
+        if (nome) {
+            parametros.append("nome", nome);
+        }
 
-        const jogos = await resposta.json();
+        const resposta = await fetch(
+            `/api/biblioteca?${parametros}`
+        );
+
+        const dados = await resposta.json();
 
         if (!resposta.ok) {
 
             throw new Error(
-                jogos.erro ||
+                dados.erro ||
                 "Não foi possível carregar a biblioteca."
             );
 
         }
+
+        const jogos = dados.jogos;
+
+        criarPaginacao(
+            dados.totalPaginas,
+            dados.pagina,
+            nome
+        );
 
         gridJogos.innerHTML = "";
 
@@ -449,6 +553,8 @@ async function carregarBiblioteca(nome = "") {
 
             gridJogos.textContent =
                 "Nenhum jogo encontrado.";
+
+            paginacao.innerHTML = "";
 
             return;
         }
@@ -518,6 +624,6 @@ formPesquisa.addEventListener("submit", (evento) => {
     const nome =
         campoPesquisa.value.trim();
 
-    carregarBiblioteca(nome);
+    carregarBiblioteca(nome, 1);
 
 });

@@ -424,3 +424,13 @@ main section:first-child button:hover {
     background-color: #1f2937;
     color: #ffffff;
 }
+
+.paginacao button.ativa {
+    background-color: #1f2937;
+    color: #ffffff;
+}
+
+.paginacao button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}

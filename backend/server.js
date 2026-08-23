@@ -379,6 +379,15 @@ app.get("/api/biblioteca", async (req, res) => {
 
         const nome = req.query.nome?.trim();
 
+        const pagina =
+            Math.max(parseInt(req.query.pagina, 10) || 1, 1);
+
+        const limite =
+            Math.max(parseInt(req.query.limite, 10) || 9, 1);
+
+        const offset =
+            (pagina - 1) * limite;
+
         let sql = `
             SELECT
                 id,
@@ -393,7 +402,13 @@ app.get("/api/biblioteca", async (req, res) => {
             FROM jogos
         `;
 
+        let sqlTotal = `
+            SELECT COUNT(*) AS total
+            FROM jogos
+        `;
+
         const valores = [];
+        const valoresTotal = [];
 
         if (nome) {
 
@@ -401,20 +416,47 @@ app.get("/api/biblioteca", async (req, res) => {
                 WHERE nome LIKE ?
             `;
 
-            valores.push(`%${nome}%`);
+            sqlTotal += `
+                WHERE nome LIKE ?
+            `;
+
+            const termoBusca = `%${nome}%`;
+
+            valores.push(termoBusca);
+            valoresTotal.push(termoBusca);
 
         }
 
         sql += `
             ORDER BY id DESC
+            LIMIT ${limite}
+            OFFSET ${offset}
         `;
+
+        valores.push(limite, offset);
 
         const [jogos] = await pool.execute(
             sql,
             valores
         );
 
-        return res.json(jogos);
+        const [resultadoTotal] = await pool.execute(
+            sqlTotal,
+            valoresTotal
+        );
+
+        const total = resultadoTotal[0].total;
+
+        const totalPaginas =
+            Math.ceil(total / limite);
+
+        return res.json({
+            jogos,
+            pagina,
+            limite,
+            total,
+            totalPaginas
+        });
 
     } catch (erro) {
 
