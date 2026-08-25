@@ -671,11 +671,3 @@ camposObrigatorios.forEach(campo => {
     });
 
 });
-
-campo.addEventListener("change", () => {
-
-    if (campo.value.trim()) {
-        campo.classList.remove("campo-invalido");
-    }
-
-});

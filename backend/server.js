@@ -480,6 +480,39 @@ app.get("/api/biblioteca", async (req, res) => {
 
 });
 
+// Rota de Health Check
+// Utilizada para verificar se a aplicação está funcionando 
+// e se comunicando com o banco
+
+app.get("/api/health", async (req, res) => {
+
+    try {
+        //Executa uma consulta simples no mysql
+        //Não vamos buscar dados reais - Conexão funciona? OK!
+        await pool.query("SELECT 1");
+
+        //Se chegamos até aqui, a aplicação e o banco estão acessíveis
+        return res.status(200).json({
+            status: "Ok",
+            aplicacao: "GameHub",
+            banco: "Conectado"
+        });
+    } catch (erro) {
+        //Caso o MySQL não responda... registramos o erro no servidor
+        console.error("Erro no health check: ", erro.message);
+    }
+
+
+    //HTTP 503 = Service Unavailable
+    //A aplicação está rodando, mas não está pronta
+    //Para funcionar corretamente porque depende do banco
+    return res.status(503).json({
+        status: erro,
+        aplicacao: "GameHub",
+        banco: "indisponível"
+    });
+});
+
 app.listen(3000, () => {
     console.log("Servidor rodando em http://localhost:3000");
 });
