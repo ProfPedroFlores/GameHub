@@ -18,37 +18,39 @@ on:
 # test:
 # build:
 # security:
-validate:
-  name: Validar GameHub # Nome do Job
-  runs-on: ubuntu-latest # Executa no runner (ambiente)
 
-defaults:
-  run:
-    working-directory: backend # Procura a past backend ANTES de executar o Action
+jobs:
+  validate:
+    name: Validar GameHub # Nome do Job
+    runs-on: ubuntu-latest # Executa no runner (ambiente)
 
-steps:
-  - name: Checkout do Repositório # Quando o runner nasce ele procura o repositório
-    uses: actions/checkout@v7 # @v7 versão mais recente
+  defaults:
+    run:
+      working-directory: backend # Procura a past backend ANTES de executar o Action
 
-  - name: Fazer Setup do Node.js
-    uses: actions/setup-node@v7 # Diz para o runner rodar no ambiente node
-    with:
-      node-version: 24
-      cache: npm
-      cache-dependency-path: backend/package-lock.json
+  steps:
+    - name: Checkout do Repositório # Quando o runner nasce ele procura o repositório
+      uses: actions/checkout@v7 # @v7 versão mais recente
 
-  - name: Instalar dependências # Instala tudo no Runner (longe do repositório)
-    run: npm ci # Não baixa o node_modules novamente, apenas executa.
+    - name: Fazer Setup do Node.js
+      uses: actions/setup-node@v7 # Diz para o runner rodar no ambiente node
+      with:
+        node-version: 24
+        cache: npm
+        cache-dependency-path: backend/package-lock.json
 
-  # Pede ao node o seguinte:
-  # "Leia e valida a sintaxe desse arquivo sem executa-lo"
-  - name: Validar sintaxe back-end
-    run: |
-      node --check server.js
-      node --check db.js
+    - name: Instalar dependências # Instala tudo no Runner (longe do repositório)
+      run: npm ci # Não baixa o node_modules novamente, apenas executa.
 
-  - name: Validar sintaxe front-end
-    run: node --check ../public/js/script.js
+    # Pede ao node o seguinte:
+    # "Leia e valida a sintaxe desse arquivo sem executa-lo"
+    - name: Validar sintaxe back-end
+      run: |
+        node --check server.js
+        node --check db.js
+
+    - name: Validar sintaxe front-end
+      run: node --check ../public/js/script.js
 
 # package.json
 # -> Quais dependências queremos!
