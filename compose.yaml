@@ -1,12 +1,14 @@
-# Indica os serviços para a composição do container
+# Nome do projeto Docker Compose.
+# Garante que a execução manual e a execução pelo Jenkins
+# administrem o mesmo ambiente, mesmo estando em pastas diferentes.
+name: gamehub
 
 services:
   # Utiliza a imagem oficial do MySQL
   # Verificar a tag "latest"
   mysql:
     image: mysql:8.4
-    # Define um nome amigável para o container
-    container_name: gamehub-mysql
+    
     # Carrega as variáveis de ambiente para configurar o MySQL
     env_file:
       - ./backend/.env.docker
@@ -43,8 +45,6 @@ services:
       context: .
 
       dockerfile: Dockerfile
-
-    container_name: gamehub-web
 
     ports:
       - "3000:3000"

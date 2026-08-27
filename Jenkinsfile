@@ -190,13 +190,13 @@ pipeline {
 
             steps {
 
-                // Inicia os serviços definidos no Compose.
+                // Atualiza o ambiente para refletir o estado
+                // descrito no compose.yaml.
                 //
-                // -d = detached mode
-                //
-                // Os containers continuam rodando em
-                // background e o Jenkins pode prosseguir.
-                bat 'docker compose up -d'
+                // --remove-orphans remove containers antigos
+                // pertencentes ao mesmo projeto Compose e que
+                // deixaram de existir na configuração atual.
+                bat 'docker compose up -d --remove-orphans'
 
 
                 // Exibe o estado atual dos serviços
