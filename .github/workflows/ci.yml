@@ -27,19 +27,16 @@ jobs:
     defaults:
       run:
         working-directory: backend # Procura a past backend ANTES de executar o Action
-<<<<<<< HEAD
 
     steps:
       - name: Checkout do Repositório # Quando o runner nasce ele procura o repositório
         uses: actions/checkout@v7 # @v7 versão mais recente
 
-=======
   
     steps:
       - name: Checkout do Repositório # Quando o runner nasce ele procura o repositório
         uses: actions/checkout@v7 # @v7 versão mais recente
   
->>>>>>> f413d1503ae7d903cc357d1ac49f046986a82c53
       - name: Fazer Setup do Node.js
         uses: actions/setup-node@v7 # Diz para o runner rodar no ambiente node
         with:

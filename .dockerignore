@@ -1,0 +1,14 @@
+# Dependências locais do Node
+backend/node_modules
+
+# Variáveis de ambiente e segredos
+backend/.env
+backend/.env.docker
+
+# Arquivos de Git
+.git 
+.gitignore
+
+# Arquivos gerados pelo SO
+.DS_Store
+Thumbs.db
