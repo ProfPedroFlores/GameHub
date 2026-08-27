@@ -43,28 +43,20 @@ jobs:
           node-version: 24
           cache: npm
           cache-dependency-path: backend/package-lock.json
-<<<<<<< HEAD
 
       - name: Instalar dependências # Instala tudo no Runner (longe do repositório)
         run: npm ci # Não baixa o node_modules novamente, apenas executa.
-
-=======
   
       - name: Instalar dependências # Instala tudo no Runner (longe do repositório)
         run: npm ci # Não baixa o node_modules novamente, apenas executa.
   
->>>>>>> f413d1503ae7d903cc357d1ac49f046986a82c53
       # Pede ao node o seguinte:
       # "Leia e valida a sintaxe desse arquivo sem executa-lo"
       - name: Validar sintaxe back-end
         run: |
           node --check server.js
           node --check db.js
-<<<<<<< HEAD
-
-=======
-  
->>>>>>> f413d1503ae7d903cc357d1ac49f046986a82c53
+          
       - name: Validar sintaxe front-end
         run: node --check ../public/js/script.js
 
@@ -76,9 +68,4 @@ jobs:
 
   # npm ci
   # -> reproduz o ambiente
-
-<<<<<<< HEAD
   # -> DevOps puro
-=======
-# -> DevOps puro
->>>>>>> f413d1503ae7d903cc357d1ac49f046986a82c53
