@@ -1,8 +1,9 @@
 # Nome visual do Workflow
 name: GameHub CI
 
-# Executa este workflow quando houver push no main 
-# ou PR fazendo merge para o main
+# Executa este workflow quando:
+# - houver push diretamente na branch main
+# - houver Pull Request direcionado para a branch main
 on:
   push:
     branches:
@@ -12,60 +13,108 @@ on:
     branches:
       - main
 
-# Vamos usar o validate
-# jobs podem conter
+
+# Um workflow pode possuir vários jobs, por exemplo:
 # validate:
 # test:
 # build:
 # security:
-
+#
+# Neste primeiro momento utilizaremos apenas o job "validate".
 jobs:
-  validate:
-    name: Validar GameHub # Nome do Job
-    runs-on: ubuntu-latest # Executa no runner (ambiente)
 
+  validate:
+
+    # Nome visual do Job
+    name: Validar GameHub
+
+    # Executa o Job em uma máquina virtual Ubuntu
+    # fornecida temporariamente pelo GitHub.
+    runs-on: ubuntu-latest
+
+
+    # Define o diretório padrão para comandos "run".
+    #
+    # Como package.json, package-lock.json, server.js e db.js
+    # estão dentro de backend/, os comandos serão executados
+    # considerando essa pasta como diretório atual.
+    #
+    # IMPORTANTE:
+    # Isso afeta comandos "run", mas não Actions utilizadas
+    # através de "uses".
     defaults:
       run:
-        working-directory: backend # Procura a past backend ANTES de executar o Action
+        working-directory: backend
 
-    steps:
-      - name: Checkout do Repositório # Quando o runner nasce ele procura o repositório
-        uses: actions/checkout@v7 # @v7 versão mais recente
 
-  
+    # Todos os passos deste Job ficam dentro
+    # de um ÚNICO bloco "steps".
     steps:
-      - name: Checkout do Repositório # Quando o runner nasce ele procura o repositório
-        uses: actions/checkout@v7 # @v7 versão mais recente
-  
+
+      # Quando o runner nasce, ele ainda não possui
+      # os arquivos do nosso projeto.
+      #
+      # Esta Action faz o checkout do repositório
+      # para dentro da máquina do runner.
+      - name: Checkout do repositório
+        uses: actions/checkout@v7
+
+
+      # Prepara o ambiente Node.js no runner.
       - name: Fazer Setup do Node.js
-        uses: actions/setup-node@v7 # Diz para o runner rodar no ambiente node
+        uses: actions/setup-node@v7
+
         with:
+
+          # Versão do Node utilizada pela pipeline.
           node-version: 24
+
+          # Permite ao setup-node utilizar cache do npm
+          # para acelerar futuras execuções.
           cache: npm
+
+          # Como package-lock.json não está na raiz,
+          # informamos seu caminho.
           cache-dependency-path: backend/package-lock.json
 
-      - name: Instalar dependências # Instala tudo no Runner (longe do repositório)
-        run: npm ci # Não baixa o node_modules novamente, apenas executa.
-  
-      - name: Instalar dependências # Instala tudo no Runner (longe do repositório)
-        run: npm ci # Não baixa o node_modules novamente, apenas executa.
-  
-      # Pede ao node o seguinte:
-      # "Leia e valida a sintaxe desse arquivo sem executa-lo"
+
+      # Instala as dependências descritas no package-lock.json.
+      #
+      # npm ci é muito utilizado em CI porque procura
+      # reproduzir exatamente as versões registradas
+      # no arquivo de lock.
+      - name: Instalar dependências
+        run: npm ci
+
+
+      # Pede ao Node:
+      # "Leia estes arquivos e valide sua sintaxe
+      # sem executar normalmente a aplicação."
       - name: Validar sintaxe back-end
         run: |
           node --check server.js
           node --check db.js
-          
+
+
+      # Como o working-directory é backend/,
+      # ../ significa voltar para a raiz do projeto.
+      #
+      # Assim conseguimos acessar:
+      # public/js/script.js
       - name: Validar sintaxe front-end
         run: node --check ../public/js/script.js
 
-  # package.json
-  # -> Quais dependências queremos!
 
-  # package-lock.json
-  # -> quais versões queremos!
+# ==========================================================
+# REVISÃO
+# ==========================================================
 
-  # npm ci
-  # -> reproduz o ambiente
-  # -> DevOps puro
+# package.json
+# -> declara quais dependências o projeto utiliza
+
+# package-lock.json
+# -> registra exatamente quais versões foram resolvidas
+
+# npm ci
+# -> instala as dependências de forma reproduzível
+#    utilizando o package-lock.json
