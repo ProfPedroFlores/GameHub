@@ -269,6 +269,8 @@ gamehub
 
 A aplicação utiliza a API externa TheGamesDB para realizar buscas de jogos.
 
+**Primeiro** crie uma conta aqui [TheGamesDB](https://thegamesdb.net). Vá em **API** e **API KEY** para gerar sua chave.
+
 Configure:
 
 ```env
